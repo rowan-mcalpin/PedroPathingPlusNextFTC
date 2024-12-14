@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 
 object OpModeData {
-    var hardwareMap: HardwareMap? = null
+    lateinit var hardwareMap: HardwareMap
     
     var follower: Follower? = null
     

@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.ftc.controls
+package com.rowanmcalpin.nextftc.ftc.gamepad
 
 /**
  * This is the abstract class that all Controls extend. All controls have a state, and some

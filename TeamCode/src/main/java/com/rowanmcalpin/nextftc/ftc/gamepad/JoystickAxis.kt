@@ -1,7 +1,5 @@
-package com.rowanmcalpin.nextftc.ftc.controls
+package com.rowanmcalpin.nextftc.ftc.gamepad
 
-import com.rowanmcalpin.nextftc.core.command.Command
-import com.rowanmcalpin.nextftc.core.command.utility.NullCommand
 import kotlin.math.abs
 
 /**

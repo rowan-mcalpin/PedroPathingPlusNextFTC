@@ -32,14 +32,14 @@ class BlockingSwitchCommand(
         val value = this.value.invoke()
         outcomes.forEach {
             if (it.first == value) {
-                CommandManager.addCommand(it.second)
+                CommandManager.scheduleCommand(it.second)
                 selectedCommands.add(it.second)
             }
         }
         
         if (selectedCommands.size == 0) {
             if (default != null) {
-                CommandManager.addCommand(default)
+                CommandManager.scheduleCommand(default)
                 selectedCommands.add(default)
             }
         }

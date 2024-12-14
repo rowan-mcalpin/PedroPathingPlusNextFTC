@@ -7,7 +7,7 @@ import com.rowanmcalpin.nextftc.ftc.OpModeData
 /**
  * This command updates the Pedro Path follower continuously as long as the OpMode is running.
  */
-class UpdateFollowerCommand: Command() {
+class UpdateFollower: Command() {
     
     override val isDone: Boolean = false
 

@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.ftc.controls
+package com.rowanmcalpin.nextftc.ftc.gamepad
 
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
@@ -40,19 +40,19 @@ class Trigger(private val trigger: () -> Float, private val threshold: Float = 0
         updateState(value > threshold)
         
         if (state) {
-            CommandManager.addCommand(heldCommand(value))
+            CommandManager.scheduleCommand(heldCommand(value))
         }
         
         if (risingState) {
-            CommandManager.addCommand(pressedCommand(value))
+            CommandManager.scheduleCommand(pressedCommand(value))
         }
         
         if (fallingState) {
-            CommandManager.addCommand(releasedCommand(value))
+            CommandManager.scheduleCommand(releasedCommand(value))
         }
         
         if (stateChanged) {
-            CommandManager.addCommand(stateChangeCommand(value))
+            CommandManager.scheduleCommand(stateChangeCommand(value))
         }
     }
 }

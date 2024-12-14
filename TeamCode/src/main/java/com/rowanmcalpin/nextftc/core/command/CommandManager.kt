@@ -1,140 +1,196 @@
 package com.rowanmcalpin.nextftc.core.command
 
+import com.qualcomm.robotcore.util.ElapsedTime
+import com.qualcomm.robotcore.util.RobotLog
+import com.rowanmcalpin.nextftc.core.command.groups.CommandGroup
+
 /**
  * This is the central controller for running commands in NextFTC. 
  */
 object CommandManager {
 
     /**
-     * List of actively running commands.
+     * Actively running commands.
      */
-    private val runningCommands = mutableListOf<Command>()
+    val runningCommands = mutableListOf<Command>()
 
     /**
-     * Commands that this controller needs to stop (remove from the [runningCommands] list).
+     * Commands that haven't been started yet.
      */
-    private val commandsToStop = mutableListOf<Pair<Command, Boolean>>()
+    private val commandsToSchedule = mutableListOf<Command>()
+    private val commandsToCancel = mutableMapOf<Command, Boolean>()
+
+    private var loopCount = 0
+
+    private val timer: ElapsedTime = ElapsedTime()
+
+    var averageLoopTime: Double = 0.0
+        private set
 
     /**
-     * Initializes the [CommandManager]. This should be the first thing called in every OpMode.
+     * This function should be run repeatedly every loop. It adds commands if the corresponding
+     * Gamepad buttons are being pushed, it runs the periodic functions in Subsystems, it schedules
+     * & cancels any commands that need to be started or stopped, and it executes running
+     * commands. The reason why it uses a separate function to cancel commands instead of cancelling
+     * them itself is because removing items from a list while iterating through that list is a
+     * wacky idea.
      */
-    fun init() {
-        // There should be no commands running when the OpMode is initialized. Clear out all lists.
+    // exercise is healthy (and fun!)
+    fun run() {
+        scheduleCommands()
+        cancelCommands()
+        for (command in runningCommands) {
+            command.update()
+            
+            if (command.isDone) {
+                commandsToCancel += Pair(command, false)
+            }
+        }
+        
+        loopCount++
+
+        averageLoopTime = timer.seconds() / loopCount
+    }
+
+    /**
+     * Schedules a command. When multiple commands are scheduled, each of them run in parallel.
+     * @param command the command to be scheduled
+     */
+    fun scheduleCommand(command: Command) {
+        commandsToSchedule += command
+    }
+
+    /**
+     * Cancels every command. This function should generally only be used when an OpMode ends.
+     */
+    fun cancelAll() {
+        for (command in runningCommands) {
+            commandsToCancel += Pair(command, true)
+        }
         runningCommands.clear()
+        cancelCommands()
+        commandsToSchedule.clear()
     }
 
     /**
-     * Updates the [CommandManager]. Should be called repeatedly during both initialization and during the OpMode.
+     * Returns whether or not there are commands running
      */
-    fun update() {
-        // First, stop any commands that needed stopping last update
-        stopCommands()
-        
-        // Then, update (and stop) currently running commands
-        runningCommands.forEach { command -> 
-            try {
-                // First thing we want to do is call the update() function on all of our commands
-                command.update()
-                
-                // Then, if it's done, stop it
-                if (command.isDone) {
-                    stopCommand(command, false)
+    fun hasCommands(): Boolean = runningCommands.isNotEmpty()
+
+    /**
+     * Initializes every command in the commandsToSchedule list.
+     */
+    private fun scheduleCommands() {
+        for(command in commandsToSchedule) {
+            initCommand(command)
+        }
+        commandsToSchedule.clear()
+    }
+
+    /**
+     * Cancels every command in the commandsToCancel list.
+     */
+    fun cancelCommands() {
+        for(pair in commandsToCancel) {
+            cancel(pair.key, pair.value)
+        }
+        commandsToCancel.clear()
+    }
+
+    /**
+     * Initializes a command. This function first scans to find any conflicts (other commands using
+     * the same subsystem). It then checks to see if any of those commands are not interruptible. If
+     * some of them aren't interruptible, it ends the initialization process and does not schedule
+     * the new command. Otherwise, it cancels the conflicts, runs the new command's start function,
+     * and adds it to the list of runningCommands.
+     * @param command the new command being initialized
+     */
+    private fun initCommand(command: Command) {
+        for (otherCommand in runningCommands) {
+            for (requirement in command.subsystems) {
+                if (otherCommand.subsystems.contains(requirement)) {
+                    if (otherCommand.interruptible) {
+                        commandsToCancel += Pair(otherCommand, true)
+                    } else {
+                        return
+                    }
                 }
-            } catch (e: Exception) {
-                // TODO: Handle command execution errors. Perhaps log to a command log file, then re-throw the exception? Or log + print to telemetry?
             }
         }
-    }
-
-    /**
-     * Attempts to add a command to the running commands.
-     * @param command the command to add
-     * @return whether the command was able to be added
-     */
-    fun addCommand(command: Command): Boolean {
-        val conflict = findConflicts(command)
-        if (conflict == null) {
-            // If there are no conflicts, just add this command
-            runningCommands += command
-        } else {
-            if (conflict.interruptible) {
-                stopCommand(conflict, true)
-                runningCommands += command
-            } else {
-                // If there is a conflict, but it is not interruptible, we cannot add this command.
-                return false
-            }
-        }
-        
-        // If we've gotten to this point, the command was successfully added. Now we need to call its
-        // start() function before its update() function is run for the first time.
+//
+//        for (requirement in command.requirements) {
+//            val conflicts = findCommands({ it.requirements.contains(requirement) }).toMutableList()
+//            if (conflicts.contains(command)) {
+//                conflicts -= command
+//            }
+//            for (conflict in conflicts)
+//                if (!conflict.interruptible) {
+//                    return
+//                }
+//            for (conflict in conflicts)
+//                commandsToCancel += Pair(command, true)
+//            cancelCommands()
+//        }
         command.start()
-        
-        // Now we can return true, because everything worked!
-        return true
+        runningCommands += command
     }
 
     /**
-     * MUST be called when the OpMode has been stopped.
+     * Ends a command and removes it from the runningCommands list.
+     * @param command the command being cancelled
+     * @param interrupted whether or not that command was interrupted, such as the OpMode is stopped
+     *                    prematurely
      */
-    fun stop() {
-        // When the OpMode is stopped, we don't care if the Commands don't want to be done yet.
-        forceStopAll()
+    private fun cancel(command: Command, interrupted: Boolean = false) {
+        command.stop(interrupted)
+        runningCommands -= command
     }
 
     /**
-     * Force stops all active [Command]s. 
+     * Calls the findCommands() function and uses the first result, or null if there are none
+     * @param check the lambda used to determine what kind of command should be found
+     * @param commands the list of commands to scan, uses runningCommands by default
      */
-    fun forceStopAll() {
-        runningCommands.forEach { command ->
-            stopCommand(command, true)
-        }
-    }
+    private fun findCommand(check: (Command) -> Boolean, commands : List<Command> = runningCommands) =
+        findCommands(check, commands).firstOrNull()
 
     /**
-     * Stops all active [Command]s that are interruptible.
+     * Returns a list of every command in the given list that passes a check. Also scans
+     * CommandGroups by recursively calling itself.
+     * @param check the lambda used to determine what kind of commands should be found
+     * @param commands the list of commands to scan, uses runningCommands by default
      */
-    fun gentleStopAll() {
-        runningCommands.forEach { command ->
-            if (command.interruptible) {
-                stopCommand(command, true)
+    private fun findCommands(check: (Command) -> Boolean, commands : List<Command> = runningCommands):
+            List<Command> {
+        val foundCommands = mutableListOf<Command>()
+        for (command in commands) {
+            if (check.invoke(command))
+                foundCommands.add(command)
+            if (command is CommandGroup) {
+                val c = findCommand(check, command.children)
+                if (c != null) foundCommands.add(c)
             }
         }
+        return foundCommands
     }
 
-    /**
-     * Finds [Subsystem] conflicts between a command and all of the running commands.
-     * @param command the command to find conflicts with
-     * @return the conflicting command, if there is one
-     */
-    fun findConflicts(command: Command): Command? {
-        command.subsystems.forEach { subsystem ->
-            runningCommands.forEach { otherCommand ->
-                if (otherCommand.subsystems.contains(subsystem)) {
-                    return otherCommand
+    fun findConflicts(command: Command): List<Command> {
+        val foundConflicts: MutableList<Command> = mutableListOf()
+
+        for (otherCommand in runningCommands) {
+            for (requirement in command.subsystems) {
+                if (otherCommand.subsystems.contains(requirement)) {
+                    foundConflicts += otherCommand
                 }
             }
         }
-        
-        return null
+
+        return foundConflicts
     }
 
-    /**
-     * Stops a [Command].
-     * @param command the command to stop
-     * @param interrupted whether the command stopped because it was finished, or because an incompatible command was scheduled
-     */
-    fun stopCommand(command: Command, interrupted: Boolean) {
-        commandsToStop.add(Pair(command, interrupted))
-    }
-
-    /**
-     * Stops any [Command]s that need stopping.
-     */
-    private fun stopCommands() {
-        commandsToStop.forEach { 
-            runningCommands.remove(it.first)
-            it.first.stop(it.second)
+    fun cancelCommand(command: Command) {
+        if (runningCommands.contains(command)) {
+            commandsToCancel += Pair(command, true)
         }
     }
 }

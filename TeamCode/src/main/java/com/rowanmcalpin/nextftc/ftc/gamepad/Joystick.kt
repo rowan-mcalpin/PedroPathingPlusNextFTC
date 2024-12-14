@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.ftc.controls
+package com.rowanmcalpin.nextftc.ftc.gamepad
 
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
@@ -79,19 +79,19 @@ class Joystick(private val xAxisValue: () -> Float, private val yAxisValue: () -
         button.update()
 
         if (xAxis.state || yAxis.state) {
-            CommandManager.addCommand(heldCommand(Pair(x, y)))
+            CommandManager.scheduleCommand(heldCommand(Pair(x, y)))
         }
 
         if (xAxis.risingState || yAxis.risingState) {
-            CommandManager.addCommand(displacedCommand(Pair(x, y)))
+            CommandManager.scheduleCommand(displacedCommand(Pair(x, y)))
         }
 
         if (xAxis.fallingState || yAxis.fallingState) {
-            CommandManager.addCommand(releasedCommand(Pair(x, y)))
+            CommandManager.scheduleCommand(releasedCommand(Pair(x, y)))
         }
 
         if (xAxis.stateChanged || yAxis.stateChanged) {
-            CommandManager.addCommand(stateChangeCommand(Pair(x, y)))
+            CommandManager.scheduleCommand(stateChangeCommand(Pair(x, y)))
         }
     }
 }

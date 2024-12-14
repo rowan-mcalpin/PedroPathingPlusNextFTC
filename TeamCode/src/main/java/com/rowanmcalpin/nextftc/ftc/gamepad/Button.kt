@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.ftc.controls
+package com.rowanmcalpin.nextftc.ftc.gamepad
 
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
@@ -33,19 +33,19 @@ class Button(private val button: () -> Boolean): Control() {
         updateState(button())
         
         if (state) {
-            CommandManager.addCommand(heldCommand())
+            CommandManager.scheduleCommand(heldCommand())
         }
         
         if (risingState) {
-            CommandManager.addCommand(pressedCommand())
+            CommandManager.scheduleCommand(pressedCommand())
         }
         
         if (fallingState) {
-            CommandManager.addCommand(releasedCommand())
+            CommandManager.scheduleCommand(releasedCommand())
         }
         
         if (stateChanged) {
-            CommandManager.addCommand(stateChangeCommand())
+            CommandManager.scheduleCommand(stateChangeCommand())
         }
     }
 }

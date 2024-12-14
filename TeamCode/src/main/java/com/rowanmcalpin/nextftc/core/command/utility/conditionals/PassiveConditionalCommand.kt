@@ -21,10 +21,10 @@ class PassiveConditionalCommand(
     
     override fun start() {
         if (condition.invoke()) {
-            CommandManager.addCommand(trueCommand)
+            CommandManager.scheduleCommand(trueCommand)
         } else {
             if (falseCommand != null) {
-                CommandManager.addCommand(falseCommand)
+                CommandManager.scheduleCommand(falseCommand)
             }
         }
     }

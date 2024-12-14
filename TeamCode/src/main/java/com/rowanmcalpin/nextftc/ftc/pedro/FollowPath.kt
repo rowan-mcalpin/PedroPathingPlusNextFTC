@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain
  * @param path the path to follow
  * @param holdEnd whether to actively hold position after the path is done being followed
  */
-class FollowPathCommand(val path: PathChain, val holdEnd: Boolean = true): Command() {
+class FollowPath(val path: PathChain, val holdEnd: Boolean = true): Command() {
     
     constructor (path: Path, holdEnd: Boolean = true): this(PathChain(path), holdEnd)
     

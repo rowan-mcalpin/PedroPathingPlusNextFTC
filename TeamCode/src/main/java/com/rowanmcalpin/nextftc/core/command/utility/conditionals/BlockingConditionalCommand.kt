@@ -27,11 +27,11 @@ class BlockingConditionalCommand(
 
     override fun start() {
         if (condition.invoke()) {
-            CommandManager.addCommand(trueCommand)
+            CommandManager.scheduleCommand(trueCommand)
             result = true
         } else {
             if (falseCommand != null) {
-                CommandManager.addCommand(falseCommand)
+                CommandManager.scheduleCommand(falseCommand)
                 result = false
             }
         }

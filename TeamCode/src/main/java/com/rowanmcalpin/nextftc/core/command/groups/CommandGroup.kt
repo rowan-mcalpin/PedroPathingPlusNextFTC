@@ -16,7 +16,7 @@ abstract class CommandGroup(vararg commands: Command): Command() {
     /**
      * The collection of all commands within this group.
      */
-    protected val children: MutableList<Command> = mutableListOf()
+    val children: MutableList<Command> = mutableListOf()
 
     /**
      * Overrides the [Command.subsystems] variable to inherit all subsystems from all of its children.

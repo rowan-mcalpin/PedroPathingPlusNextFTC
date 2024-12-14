@@ -27,7 +27,7 @@ class ParallelGroup(vararg commands: Command): CommandGroup(*commands) {
      */
     override fun start() {
         children.forEach { 
-            CommandManager.addCommand(it)
+            CommandManager.scheduleCommand(it)
         }
     }
 

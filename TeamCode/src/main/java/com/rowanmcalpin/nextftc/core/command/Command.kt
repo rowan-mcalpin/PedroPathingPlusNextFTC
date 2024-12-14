@@ -44,4 +44,11 @@ abstract class Command {
      * @param interrupted whether this command was interrupted 
      */
     open fun stop(interrupted: Boolean) { }
+
+    /**
+     * Allows you to directly "call" a command
+     */
+    operator fun invoke() {
+        CommandManager.scheduleCommand(this)
+    }
 }

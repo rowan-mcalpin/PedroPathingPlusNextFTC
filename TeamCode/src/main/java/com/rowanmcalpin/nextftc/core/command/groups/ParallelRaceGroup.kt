@@ -28,7 +28,7 @@ class ParallelRaceGroup(vararg commands: Command): CommandGroup(*commands) {
      */
     override fun start() {
         children.forEach { 
-            CommandManager.addCommand(it)
+            CommandManager.scheduleCommand(it)
         }
     }
 
@@ -39,7 +39,7 @@ class ParallelRaceGroup(vararg commands: Command): CommandGroup(*commands) {
 
     override fun stop(interrupted: Boolean) {
         children.forEach { 
-            CommandManager.stopCommand(it, true)
+            CommandManager.cancelCommand(it)
         }
     }
 }

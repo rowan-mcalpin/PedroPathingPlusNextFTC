@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.nextFTCTesting
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode
 
-class TestSubsystem: Subsystem {
-    
-}
+@TeleOp(name = "NextFTC Testing", group = "testing")
+class TestingOpMode: NextFTCOpMode(LinearSlide) {
 
-class TestingOpMode: NextFTCOpMode(TestSubsystem(), TestSubsystem(), autoCreateGamepadManager = true) {
+    override fun onInit() {
+        gamepadManager.gamepad1.a.pressedCommand = { LinearSlide.out }
+        gamepadManager.gamepad1.b.pressedCommand = { LinearSlide.toIn }
+    }
 }

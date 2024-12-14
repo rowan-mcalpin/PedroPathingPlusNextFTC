@@ -1,10 +1,11 @@
 package com.rowanmcalpin.nextftc.ftc
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.CommandManager
-import com.rowanmcalpin.nextftc.ftc.controls.GamepadManager
-import com.rowanmcalpin.nextftc.ftc.pedro.UpdateFollowerCommand
+import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadManager
+import com.rowanmcalpin.nextftc.ftc.pedro.UpdateFollower
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 
 /**
@@ -13,32 +14,34 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
  *  - If desired, automatically implements and handles Gamepads
  *  - If desired, automatically updates the PedroPath Follower 
  */
-open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf(), autoCreateGamepadManager: Boolean = false): LinearOpMode() {
+open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOpMode() {
     
-    open val follower: Follower? = null
+    lateinit var follower: Follower
     
-    open val gamepadManager: GamepadManager? = if (autoCreateGamepadManager) GamepadManager(gamepad1, gamepad2) else null
+    open lateinit var gamepadManager: GamepadManager
     
     override fun runOpMode() {
         OpModeData.hardwareMap = hardwareMap
         OpModeData.gamepad1 = gamepad1
         OpModeData.gamepad2 = gamepad2
         
-        CommandManager.init()
+        gamepadManager = GamepadManager(gamepad1, gamepad2)
+        
+        CommandManager.runningCommands.clear()
+        initSubsystems()
         onInit()
         
-        // If we have a gamepad manager, add the command here
-        if (gamepadManager != null) {
-            CommandManager.addCommand(gamepadManager!!.GamepadUpdaterCommand())
-        }
+        // We want to continually update the gamepads
+        CommandManager.scheduleCommand(gamepadManager.GamepadUpdaterCommand())
         
-        if (follower != null) {
-            CommandManager.addCommand(UpdateFollowerCommand())
+        if (this::follower.isInitialized) {
+            OpModeData.follower = follower
+            CommandManager.scheduleCommand(UpdateFollower())
         }
         
         // Wait for start
         while (!isStarted && !isStopRequested) {
-            CommandManager.update()
+            CommandManager.run()
             onWaitForStart()
         }
         
@@ -48,13 +51,19 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf(), autoCreat
             onStartButtonPressed()
             
             while (!isStopRequested && isStarted) {
-                CommandManager.update()
+                CommandManager.run()
                 onUpdate()
             }
         }
         
         onStop()
-        CommandManager.stop()
+        CommandManager.cancelAll()
+    }
+    
+    fun initSubsystems() {
+        subsystems.forEach { 
+            it.initialize()
+        }
     }
     
     open fun onInit() { }

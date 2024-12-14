@@ -27,7 +27,7 @@ class SequentialGroup(vararg commands: Command): CommandGroup(*commands) {
      * execution before starting the next.
      */
     override fun start() {
-        CommandManager.addCommand(children[0])
+        CommandManager.scheduleCommand(children[0])
     }
 
     /**
@@ -41,7 +41,7 @@ class SequentialGroup(vararg commands: Command): CommandGroup(*commands) {
                 
             // Now, if there is another command to run, start it. 
             if (children.size > 0) {
-                CommandManager.addCommand(children[0])
+                CommandManager.scheduleCommand(children[0])
             }
         }
     }
