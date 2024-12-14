@@ -11,9 +11,13 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain
  * @param path the path to follow
  * @param holdEnd whether to actively hold position after the path is done being followed
  */
-class FollowPath(val path: PathChain, val holdEnd: Boolean = true): Command() {
+class FollowPath(val path: PathChain, val holdEnd: Boolean = false): Command() {
     
-    constructor (path: Path, holdEnd: Boolean = true): this(PathChain(path), holdEnd)
+    constructor (path: Path, holdEnd: Boolean = false): this(PathChain(path), holdEnd)
+    
+    // Java single parameter compatability
+    constructor(path: Path): this(PathChain(path), false)
+    constructor(path: PathChain): this(path, false)
     
     override val isDone: Boolean
         get() = OpModeData.follower!!.isBusy

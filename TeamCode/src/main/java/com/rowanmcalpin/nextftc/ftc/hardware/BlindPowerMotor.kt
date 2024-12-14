@@ -13,6 +13,9 @@ import com.rowanmcalpin.nextftc.core.command.Command
  *                      subsystem holds this command)
  */
 class BlindPowerMotor(val motor: DcMotorEx, val power: Double, override val subsystems: Set<Subsystem>): Command() {
+    
+    constructor(motor: DcMotorEx, power: Double, subsystem: Subsystem): this(motor, power, setOf(subsystem))
+    
     override val isDone: Boolean
         get() = true
 

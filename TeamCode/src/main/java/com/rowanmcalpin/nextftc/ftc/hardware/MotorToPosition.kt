@@ -18,6 +18,9 @@ import kotlin.math.abs
  */
 class MotorToPosition(val motor: DcMotorEx, val target: Double, val controller: PIDFController,
                       override val subsystems: Set<Subsystem>): Command() {
+    
+    constructor(motor: DcMotorEx, target: Double, controller: PIDFController, subsystem: Subsystem): this(motor, target, controller, setOf(subsystem))
+                          
     override val isDone: Boolean
         get() = controller.atSetPoint(motor.currentPosition.toDouble())
 

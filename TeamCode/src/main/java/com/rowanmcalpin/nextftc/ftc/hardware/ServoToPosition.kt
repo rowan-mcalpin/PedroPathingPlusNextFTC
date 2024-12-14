@@ -15,6 +15,8 @@ import com.rowanmcalpin.nextftc.core.command.Command
 class ServoToPosition(val servo: Servo, val targetPosition: Double,
                       override val subsystems: Set<Subsystem>): Command() {
                           
+    constructor(servo: Servo, targetPosition: Double, subsystem: Subsystem): this(servo, targetPosition, setOf(subsystem))
+                          
     override val isDone: Boolean
         get() = true
 

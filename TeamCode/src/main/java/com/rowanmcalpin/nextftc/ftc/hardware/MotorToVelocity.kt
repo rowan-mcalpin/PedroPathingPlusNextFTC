@@ -20,6 +20,13 @@ import kotlin.math.abs
 class MotorToVelocity(val motor: DcMotorEx, val targetVelocity: Double,
                       val controller: PIDFController, override val subsystems: Set<Subsystem>,
                       val outCondition: () -> Boolean = { abs(motor.velocity)-targetVelocity < 10 }): Command() {
+                          
+    constructor(motor: DcMotorEx, targetVelocity: Double, controller: PIDFController, subsystem: Subsystem, outCondition: () -> Boolean = { abs(motor.velocity)-targetVelocity < 10 }): this(motor, targetVelocity, controller, setOf(subsystem), outCondition)
+                          
+    // Java compatability constructors
+    constructor(motor: DcMotorEx, targetVelocity: Double, controller: PIDFController, subsystems: Set<Subsystem>): this(motor, targetVelocity, controller, subsystems, { abs(motor.velocity)-targetVelocity < 10 })
+    constructor(motor: DcMotorEx, targetVelocity: Double, controller: PIDFController, subsystem: Subsystem): this(motor, targetVelocity, controller, setOf(subsystem), { abs(motor.velocity)-targetVelocity < 10 })
+    
     override val isDone: Boolean
         get() = outCondition.invoke()
 

@@ -3,6 +3,7 @@ package com.rowanmcalpin.nextftc.ftc
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.rowanmcalpin.nextftc.core.Subsystem
+import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
 import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadManager
 import com.rowanmcalpin.nextftc.ftc.pedro.UpdateFollower
@@ -57,22 +58,43 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
         }
         
         onStop()
+        // Since users might schedule a command that stops things, we want to be able to run it 
+        // (one update of it, anyways) before we cancel all of our commands.
+        CommandManager.run()
         CommandManager.cancelAll()
     }
-    
-    fun initSubsystems() {
+
+    /**
+     * Called internally to initialize subsystems.
+     */
+    private fun initSubsystems() {
         subsystems.forEach { 
             it.initialize()
         }
     }
-    
+
+    /**
+     * This function runs ONCE when the init button is pressed.
+     */
     open fun onInit() { }
-    
+
+    /**
+     * This function runs REPEATEDLY during initialization.
+     */
     open fun onWaitForStart() { }
-    
+
+    /**
+     * This function runs ONCE when the start button is pressed.
+     */
     open fun onStartButtonPressed() { }
-    
+
+    /**
+     * This function runs REPEATEDLY when the OpMode is running.
+     */
     open fun onUpdate() { }
-    
+
+    /**
+     * This function runs ONCE when the stop button is pressed.
+     */
     open fun onStop() { }
 }
