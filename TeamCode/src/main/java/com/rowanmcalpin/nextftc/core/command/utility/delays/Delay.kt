@@ -9,7 +9,7 @@ import com.rowanmcalpin.nextftc.core.command.Command
  * @param time the desired duration of this command, in seconds
  */
 class Delay(
-    private val time: Long = 0L
+    private val time: Double = 0.0
 ): Command() {
     
     private var startTime: Double = 0.0
@@ -18,6 +18,6 @@ class Delay(
         get() = (System.nanoTime() / 1E9) - startTime >= time
 
     override fun start() {
-        startTime = System.nanoTime() / 1E9
+        startTime = System.nanoTime().toDouble() / 1E9
     }
 }

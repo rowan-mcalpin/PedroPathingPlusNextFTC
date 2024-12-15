@@ -4,9 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
+import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.pedro.FollowPath;
 
+import org.firstinspires.ftc.teamcode.nextFTCTesting.LinearSlide;
+import org.firstinspires.ftc.teamcode.nextFTCTesting.LinearSlideJava;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -48,6 +51,19 @@ public class ExampleBucketAuto extends NextFTCOpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.update();
+    }
+    
+    private Path path1;
+    private Path path2;
+    
+    public Command routine() {
+        return new ParallelGroup(
+                new SequentialGroup(
+                    new Delay(1.0), // Wait for 1 second
+                    new FollowPath(path1)
+                ),
+                LinearSlideJava.getInstance().out()
+        );
     }
     
     public Command autonomousRoutine() {
