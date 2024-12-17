@@ -1,12 +1,10 @@
 package com.rowanmcalpin.nextftc.ftc
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.rowanmcalpin.nextftc.core.Subsystem
-import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
 import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadManager
-import com.rowanmcalpin.nextftc.ftc.pedro.UpdateFollower
+import com.rowanmcalpin.nextftc.ftc.driving.UpdateFollower
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 
 /**

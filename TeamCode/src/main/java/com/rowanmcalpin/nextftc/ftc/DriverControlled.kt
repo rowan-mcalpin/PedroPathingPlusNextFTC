@@ -5,7 +5,7 @@ import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.FollowerNotInitializedException
 import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadEx
 import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick
-import com.rowanmcalpin.nextftc.ftc.pedro.Drivetrain
+import com.rowanmcalpin.nextftc.ftc.driving.Drivetrain
 
 
 /**
