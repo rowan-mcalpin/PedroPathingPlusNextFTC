@@ -2,6 +2,7 @@ package com.rowanmcalpin.nextftc.ftc
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.rowanmcalpin.nextftc.core.Subsystem
+import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
 import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadManager
 import com.rowanmcalpin.nextftc.ftc.driving.UpdateFollower
@@ -41,6 +42,15 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
         
         // Wait for start
         while (!isStarted && !isStopRequested) {
+            subsystems.forEach {
+                it.periodic()
+
+                // Check if there are any commands running that use the subsystem, or if we can safely
+                // schedule its default command
+                if (!CommandManager.hasCommandsUsing(it)) {
+                    CommandManager.scheduleCommand(it.defaultCommand)
+                }
+            }
             CommandManager.run()
             onWaitForStart()
         }
@@ -51,6 +61,15 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
             onStartButtonPressed()
             
             while (!isStopRequested && isStarted) {
+                subsystems.forEach {
+                    it.periodic()
+
+                    // Check if there are any commands running that use the subsystem, or if we can safely
+                    // schedule its default command
+                    if (!CommandManager.hasCommandsUsing(it)) {
+                        CommandManager.scheduleCommand(it.defaultCommand)
+                    }
+                }
                 CommandManager.run()
                 onUpdate()
             }

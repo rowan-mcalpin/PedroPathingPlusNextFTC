@@ -2,6 +2,7 @@ package com.rowanmcalpin.nextftc.core.command
 
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.RobotLog
+import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.groups.CommandGroup
 
 /**
@@ -117,20 +118,7 @@ object CommandManager {
                 }
             }
         }
-//
-//        for (requirement in command.requirements) {
-//            val conflicts = findCommands({ it.requirements.contains(requirement) }).toMutableList()
-//            if (conflicts.contains(command)) {
-//                conflicts -= command
-//            }
-//            for (conflict in conflicts)
-//                if (!conflict.interruptible) {
-//                    return
-//                }
-//            for (conflict in conflicts)
-//                commandsToCancel += Pair(command, true)
-//            cancelCommands()
-//        }
+        
         command.start()
         runningCommands += command
     }
@@ -172,6 +160,10 @@ object CommandManager {
             }
         }
         return foundCommands
+    }
+    
+    fun hasCommandsUsing(subsystem: Subsystem): Boolean {
+        return runningCommands.any { it.subsystems.contains(subsystem) }
     }
 
     fun findConflicts(command: Command): List<Command> {
