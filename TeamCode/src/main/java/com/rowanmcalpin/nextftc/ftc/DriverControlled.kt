@@ -39,11 +39,12 @@ class DriverControlled(val driveJoystick: Joystick, val turnJoystick: Joystick, 
     override val subsystems: Set<Subsystem> = setOf(Drivetrain)
 
     override fun start() {
-        if (OpModeData.follower == null) throw FollowerNotInitializedException()
+        if (OpModeData.follower == null) {
+            throw FollowerNotInitializedException()
+        }
         OpModeData.follower!!.startTeleopDrive()
     }
-
-
+    
     override fun update() {
         OpModeData.follower!!.setTeleOpMovementVectors(driveJoystick.y.toDouble(),
             driveJoystick.x.toDouble(), turnJoystick.x.toDouble(), robotCentric)
