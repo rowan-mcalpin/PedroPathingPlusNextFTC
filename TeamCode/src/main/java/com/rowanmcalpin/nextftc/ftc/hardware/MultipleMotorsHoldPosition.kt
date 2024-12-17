@@ -17,6 +17,9 @@ import kotlin.math.abs
  */
 class MultipleMotorsHoldPosition(val motorsAndControllers: Map<DcMotorEx, PIDFController>,
                                  override val subsystems: Set<Subsystem>): Command() {
+                                     
+    constructor(motorsAndControllers: Map<DcMotorEx, PIDFController>, subsystem: Subsystem): this(motorsAndControllers, setOf(subsystem))
+    
     override val isDone = false
 
     override fun start() {
