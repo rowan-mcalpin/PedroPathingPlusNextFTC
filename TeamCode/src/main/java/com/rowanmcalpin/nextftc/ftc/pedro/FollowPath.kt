@@ -20,7 +20,7 @@ class FollowPath(val path: PathChain, val holdEnd: Boolean = false): Command() {
     constructor(path: PathChain): this(path, false)
     
     override val isDone: Boolean
-        get() = OpModeData.follower!!.isBusy
+        get() = !OpModeData.follower!!.isBusy
 
     override fun start() {
         if (OpModeData.follower == null) {

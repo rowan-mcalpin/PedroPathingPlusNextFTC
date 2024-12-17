@@ -62,6 +62,10 @@ public class ExampleBucketAuto extends NextFTCOpMode {
                     new Delay(1.0), // Wait for 1 second
                     new FollowPath(path1)
                 ),
+                new SequentialGroup(
+                    new Delay(3.0), // Wait for 3 seconds before moving the pivot
+                    PivotSubsystem.getInstance().scoringPivot()
+                ),
                 LinearSlideJava.getInstance().out()
         );
     }

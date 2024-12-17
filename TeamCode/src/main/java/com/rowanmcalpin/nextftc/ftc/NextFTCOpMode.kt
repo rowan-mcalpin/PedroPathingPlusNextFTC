@@ -22,6 +22,7 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
     open lateinit var gamepadManager: GamepadManager
     
     override fun runOpMode() {
+        OpModeData.opMode = this
         OpModeData.hardwareMap = hardwareMap
         OpModeData.gamepad1 = gamepad1
         OpModeData.gamepad2 = gamepad2
