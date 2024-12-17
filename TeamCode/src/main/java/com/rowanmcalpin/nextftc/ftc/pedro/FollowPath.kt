@@ -1,5 +1,6 @@
 package com.rowanmcalpin.nextftc.ftc.pedro
 
+import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.FollowerNotInitializedException
 import com.rowanmcalpin.nextftc.ftc.OpModeData
@@ -21,6 +22,8 @@ class FollowPath(val path: PathChain, val holdEnd: Boolean = false): Command() {
     
     override val isDone: Boolean
         get() = !OpModeData.follower!!.isBusy
+
+    override val subsystems: Set<Subsystem> = setOf(Drivetrain)
 
     override fun start() {
         if (OpModeData.follower == null) {
