@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.nextFTCTesting;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.core.control.PIDController;
 import com.rowanmcalpin.nextftc.core.control.PIDFController;
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
@@ -59,5 +62,14 @@ public class LinearSlideJava implements Subsystem {
                 inPos,
                 getInstance()
         );
+    }
+
+    @Override
+    public void periodic() {}
+    
+    @NonNull
+    @Override
+    public Command getDefaultCommand() {
+        return new NullCommand();
     }
 }

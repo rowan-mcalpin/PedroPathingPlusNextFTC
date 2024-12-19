@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.nextFTCTesting.examplebucketauto
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point
  * 
  */
 @Autonomous(name = "Example Bucket Auto")
+@Disabled
 class ExampleBucketAuto: NextFTCOpMode(GrabSubsystem, PivotSubsystem) {
     override fun onInit() {
         follower = Follower(hardwareMap)
