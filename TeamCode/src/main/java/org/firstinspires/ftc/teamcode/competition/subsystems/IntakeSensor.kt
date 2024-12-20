@@ -29,10 +29,10 @@ object IntakeSensor: Subsystem {
     private var hsv: FloatArray = FloatArray(3)
     
     val waitUntilSample: Command
-        get() = WaitUntil({ 
+        get() = WaitUntil {
             detectedColor != SampleColors.NONE
-        })
-    
+        }
+
     class Detect: Command() {
         override val isDone = false
 

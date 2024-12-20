@@ -1,5 +1,6 @@
 package com.rowanmcalpin.nextftc.core.command.groups
 
+import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
 
@@ -23,6 +24,13 @@ class ParallelRaceGroup(vararg commands: Command): CommandGroup(*commands) {
         get() = children.any { it.isDone }
 
     /**
+     * Overrides the [Command.subsystems] variable to inherit all subsystems from all of its children.
+     */
+    override val subsystems: Set<Subsystem>
+        get() = children.flatMap { it.subsystems }.toSet()
+
+
+    /**
      * In a Parallel Group, we can just straight away add all of the commands to the CommandManager,
      * which can take care of the rest.
      */
@@ -32,7 +40,13 @@ class ParallelRaceGroup(vararg commands: Command): CommandGroup(*commands) {
         }
     }
 
-    override fun setInterruptible(interruptible: Boolean): ParallelRaceGroup {
+    /**
+     * Sets whether this command is [interruptible]. This functionality is similar to a builder class,
+     * so you can use it inline with the Command Group declaration.
+     * @param interruptible whether this group should be interruptible
+     * @return this Command Group, with [interruptible] set to the value
+     */
+    fun setInterruptible(interruptible: Boolean): ParallelRaceGroup {
         _interruptible = interruptible
         return this
     }
