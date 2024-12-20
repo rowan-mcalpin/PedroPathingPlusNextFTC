@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.nextFTCTesting
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode
 
 @TeleOp(name = "NextFTC Testing", group = "testing")
+@Disabled
 class TestingOpMode: NextFTCOpMode(LinearSlide) {
 
     override fun onInit() {
