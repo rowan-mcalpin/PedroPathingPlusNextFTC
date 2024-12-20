@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.core.control
+package com.rowanmcalpin.nextftc.core.control.controllers
 
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDFCoefficients
 import kotlin.math.abs
@@ -44,7 +44,12 @@ open class PIDFController(val coefficients: PIDFCoefficients): Controller {
         
         return (error * coefficients.kP) + (integralSum * coefficients.kI) + (derivative * coefficients.kD) + coefficients.kF
     }
-    
+
+    /**
+     * Whether this controller is within a certain distance of the [target].
+     *
+     * @param reference the current location of the motor being controlled
+     */
     fun atSetPoint(reference: Double): Boolean {
         if (abs(target - reference) <= setPointTolerance) {
             return true

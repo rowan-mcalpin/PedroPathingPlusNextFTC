@@ -13,8 +13,8 @@ import com.rowanmcalpin.nextftc.core.command.CommandManager
  */
 class PassiveSwitchCommand(
     private val value: () -> Any,
-    private vararg val outcomes: Pair<Any, Command>,
-    private val default: Command? = null
+    private vararg val outcomes: Pair<Any, () -> Command>,
+    private val default: (() -> Command)? = null
 ): Command() {
 
     /**
@@ -29,15 +29,15 @@ class PassiveSwitchCommand(
         val value = this.value.invoke()
         outcomes.forEach {
             if (it.first == value) {
-                CommandManager.scheduleCommand(it.second)
-                selectedCommands.add(it.second)
+                selectedCommands.add(it.second.invoke())
+                CommandManager.scheduleCommand(selectedCommands.last())
             }
         }
         
         if (selectedCommands.size == 0) {
             if (default != null) {
-                CommandManager.scheduleCommand(default)
-                selectedCommands.add(default)
+                selectedCommands.add(default.invoke())
+                CommandManager.scheduleCommand(selectedCommands.last())
             }
         }
     }

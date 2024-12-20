@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.core.control
+package com.rowanmcalpin.nextftc.core.control.controllers
 
 import com.rowanmcalpin.nextftc.core.control.coefficients.PDCoefficients
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients

@@ -6,7 +6,7 @@ import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.ftc.OpModeData
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition
 
-object PivotSubsystem: Subsystem {
+object PivotSubsystem: Subsystem() {
 
     private lateinit var pivot: Servo
     
