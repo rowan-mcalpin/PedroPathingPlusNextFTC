@@ -13,26 +13,28 @@ import com.rowanmcalpin.nextftc.core.command.CommandManager
  */
 class BlockingConditionalCommand(
     private val condition: () -> Boolean,
-    private val trueCommand: Command,
-    private val falseCommand: Command? = null
+    private val trueCommand: () -> Command,
+    private val falseCommand: (() -> Command)? = null
 ): Command() {
-    
-    private var result: Boolean? = null
+
+    private lateinit var selectedCommand: Command
+
     override val isDone: Boolean
         get() {
-            if (result == null) return false
-            if (result!!) return trueCommand.isDone
-            return falseCommand?.isDone == true
+            if (this::selectedCommand.isInitialized) {
+                return selectedCommand.isDone
+            }
+            return false
         }
 
     override fun start() {
         if (condition.invoke()) {
-            CommandManager.scheduleCommand(trueCommand)
-            result = true
+            selectedCommand = trueCommand.invoke()
+            CommandManager.scheduleCommand(selectedCommand)
         } else {
             if (falseCommand != null) {
-                CommandManager.scheduleCommand(falseCommand)
-                result = false
+                selectedCommand = falseCommand.invoke()
+                CommandManager.scheduleCommand(selectedCommand)
             }
         }
     }
