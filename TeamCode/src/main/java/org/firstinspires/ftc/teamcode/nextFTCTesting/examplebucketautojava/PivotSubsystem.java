@@ -13,7 +13,7 @@ import java.util.Set;
 
 import kotlin.collections.SetsKt;
 
-public class PivotSubsystem implements Subsystem {
+public class PivotSubsystem extends Subsystem {
     
     private static PivotSubsystem instance;
     

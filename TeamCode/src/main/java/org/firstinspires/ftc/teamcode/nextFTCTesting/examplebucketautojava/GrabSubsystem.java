@@ -6,7 +6,7 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition;
 
-public class GrabSubsystem implements Subsystem {
+public class GrabSubsystem extends Subsystem {
 
     private static GrabSubsystem instance;
 

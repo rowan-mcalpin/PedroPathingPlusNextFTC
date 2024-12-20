@@ -13,7 +13,7 @@ import com.rowanmcalpin.nextftc.ftc.hardware.MultipleMotorsToPosition;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class LinearSlideJava implements Subsystem {
+public class LinearSlideJava extends Subsystem {
     private static LinearSlideJava instance;
     
     private LinearSlideJava() { };

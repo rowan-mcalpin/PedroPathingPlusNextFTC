@@ -11,7 +11,7 @@ import com.rowanmcalpin.nextftc.ftc.OpModeData
 import com.rowanmcalpin.nextftc.ftc.hardware.MotorToPosition
 import com.rowanmcalpin.nextftc.ftc.hardware.MultipleMotorsToPosition
 
-object LinearSlide: Subsystem {
+object LinearSlide: Subsystem() {
     private lateinit var motor1: DcMotorEx
     private lateinit var motor2: DcMotorEx
     
