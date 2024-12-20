@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.Command
-import com.rowanmcalpin.nextftc.core.control.PIDFController
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController
 import kotlin.math.abs
 
 /**

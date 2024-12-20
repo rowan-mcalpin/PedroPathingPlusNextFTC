@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.rowanmcalpin.nextftc.core.Subsystem
 import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup
-import com.rowanmcalpin.nextftc.core.control.PIDController
-import com.rowanmcalpin.nextftc.core.control.PIDFController
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDController
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients
 import com.rowanmcalpin.nextftc.ftc.OpModeData
 import com.rowanmcalpin.nextftc.ftc.hardware.MotorToPosition

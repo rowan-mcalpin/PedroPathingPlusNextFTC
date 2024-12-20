@@ -1,8 +1,7 @@
-package com.rowanmcalpin.nextftc.core.control
+package com.rowanmcalpin.nextftc.core.control.controllers
 
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDFCoefficients
-import kotlin.math.abs
 
 /**
  * This is a PID controller that does all of the calculations internally, so you can just set the
