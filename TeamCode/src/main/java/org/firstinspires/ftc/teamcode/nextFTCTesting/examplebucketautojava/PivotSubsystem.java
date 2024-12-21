@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.nextFTCTesting.examplebucketautojava;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition;
 
@@ -13,7 +16,7 @@ import java.util.Set;
 
 import kotlin.collections.SetsKt;
 
-public class PivotSubsystem implements Subsystem {
+public class PivotSubsystem extends Subsystem {
     
     private static PivotSubsystem instance;
     
@@ -50,5 +53,16 @@ public class PivotSubsystem implements Subsystem {
     @Override
     public void initialize() {
         pivot = OpModeData.INSTANCE.getHardwareMap().get(Servo.class, "pivot");
+    }
+
+    @Override
+    public void periodic() {
+        
+    }
+
+    @NonNull
+    @Override
+    public Command getDefaultCommand() {
+        return new NullCommand();
     }
 }

@@ -1,9 +1,6 @@
-package com.rowanmcalpin.nextftc.core.control
+package com.rowanmcalpin.nextftc.core.control.controllers
 
 import com.rowanmcalpin.nextftc.core.control.coefficients.PDCoefficients
-import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients
-import com.rowanmcalpin.nextftc.core.control.coefficients.PIDFCoefficients
-import kotlin.math.abs
 
 /**
  * This is a proportional controller that does all of the calculations internally, so you can just 

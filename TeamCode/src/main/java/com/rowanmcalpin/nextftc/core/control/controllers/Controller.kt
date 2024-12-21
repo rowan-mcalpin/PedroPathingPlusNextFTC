@@ -1,4 +1,4 @@
-package com.rowanmcalpin.nextftc.core.control
+package com.rowanmcalpin.nextftc.core.control.controllers
 
 /**
  * Interface all controllers must inherit from.
@@ -11,6 +11,8 @@ interface Controller {
 
     /**
      * Given a reference, calculates how to best match the target.
+     *
+     * @param reference the current location of the motor being controlled
      */
     fun calculate(reference: Double): Double
 

@@ -7,15 +7,6 @@ import com.rowanmcalpin.nextftc.core.command.CommandManager
  * A [CommandGroup] that runs its children one at a time.
  */
 class SequentialGroup(vararg commands: Command): CommandGroup(*commands) {
-
-    /**
-     * Private variable to be able to manually set interruptible during creation.
-     */
-    private var _interruptible = true
-    
-    override val interruptible
-        get() = _interruptible
-
     /**
      * This returns true once all of its children have finished running.
      */
@@ -44,10 +35,5 @@ class SequentialGroup(vararg commands: Command): CommandGroup(*commands) {
                 CommandManager.scheduleCommand(children[0])
             }
         }
-    }
-
-    override fun setInterruptible(interruptible: Boolean): SequentialGroup {
-        _interruptible = interruptible
-        return this
     }
 }

@@ -13,18 +13,18 @@ import com.rowanmcalpin.nextftc.core.command.CommandManager
  */
 class PassiveConditionalCommand(
     private val condition: () -> Boolean,
-    private val trueCommand: Command,
-    private val falseCommand: Command? = null
+    private val trueCommand: () -> Command,
+    private val falseCommand: (() -> Command)? = null
 ): Command() {
     override val isDone: Boolean
         get() = true
     
     override fun start() {
         if (condition.invoke()) {
-            CommandManager.scheduleCommand(trueCommand)
+            CommandManager.scheduleCommand(trueCommand.invoke())
         } else {
             if (falseCommand != null) {
-                CommandManager.scheduleCommand(falseCommand)
+                CommandManager.scheduleCommand(falseCommand.invoke())
             }
         }
     }

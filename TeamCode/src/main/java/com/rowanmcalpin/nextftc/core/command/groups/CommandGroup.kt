@@ -17,18 +17,4 @@ abstract class CommandGroup(vararg commands: Command): Command() {
      * The collection of all commands within this group.
      */
     val children: MutableList<Command> = mutableListOf()
-
-    /**
-     * Overrides the [Command.subsystems] variable to inherit all subsystems from all of its children.
-     */
-    override val subsystems: Set<Subsystem>
-        get() = children.flatMap { it.subsystems }.toSet()
-
-    /**
-     * Sets whether this command is [interruptible]. This functionality is similar to a builder scheme,
-     * so you can use it inline with the Command Group declaration.
-     * @param interruptible whether this group should be interruptible
-     * @return this Command Group, with [interruptible] set
-     */
-    abstract fun setInterruptible(interruptible: Boolean): CommandGroup
 }
