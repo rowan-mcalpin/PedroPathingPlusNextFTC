@@ -2,7 +2,6 @@ package com.rowanmcalpin.nextftc.ftc
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.rowanmcalpin.nextftc.core.Subsystem
-import com.rowanmcalpin.nextftc.core.command.Command
 import com.rowanmcalpin.nextftc.core.command.CommandManager
 import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadManager
 import com.rowanmcalpin.nextftc.ftc.driving.UpdateFollower
@@ -19,12 +18,18 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
     lateinit var follower: Follower
     
     open lateinit var gamepadManager: GamepadManager
-    
+
+    open var opModeType: OpModeData.OpModeType = OpModeData.OpModeType.NONE
+    open var alliance: OpModeData.Alliance = OpModeData.Alliance.NONE
+
+
     override fun runOpMode() {
         OpModeData.opMode = this
         OpModeData.hardwareMap = hardwareMap
         OpModeData.gamepad1 = gamepad1
         OpModeData.gamepad2 = gamepad2
+        OpModeData.opModeType = opModeType
+        OpModeData.alliance = alliance
         
         gamepadManager = GamepadManager(gamepad1, gamepad2)
         
@@ -48,7 +53,7 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
                 // Check if there are any commands running that use the subsystem, or if we can safely
                 // schedule its default command
                 if (!CommandManager.hasCommandsUsing(it)) {
-                    CommandManager.scheduleCommand(it.defaultCommand)
+                    CommandManager.scheduleCommand(it.defaultCommand())
                 }
             }
             CommandManager.run()
@@ -67,7 +72,7 @@ open class NextFTCOpMode(vararg val subsystems: Subsystem = arrayOf()): LinearOp
                     // Check if there are any commands running that use the subsystem, or if we can safely
                     // schedule its default command
                     if (!CommandManager.hasCommandsUsing(it)) {
-                        CommandManager.scheduleCommand(it.defaultCommand)
+                        CommandManager.scheduleCommand(it.defaultCommand())
                     }
                 }
                 CommandManager.run()
